@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>小奥のblog CDN智能路由线路匹配系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-family: 'Open Sans', sans-serif;
+            color: #fff;
+            background: #000 url('https://tuchuang.aokaoka.top/file/1730628858465_blog.png') no-repeat center center fixed;
+            background-size: cover;
+        }
+        #results {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            max-width: 90%;
+            margin: 10px;
+        }
+        .result {
+            margin-bottom: 10px;
+            padding: 8px;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .result:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .ultra-fast { background-color: #28a745; }
+        .fast { background-color: #17a2b8; }
+        .average { background-color: #ffc107; }
+        .slow { background-color: #fd7e14; }
+        .very-slow { background-color: #dc3545; }
+        .alert-box {
+            position: fixed;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            background-color: #000;
+            color: #fff;
+            font-weight: bold;
+            animation: fadeOut 1s forwards, slideIn 0.5s forwards;
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(0); }
+        }
+
+        /* Responsive design for mobile devices */
+        @media (max-width: 768px) {
+            body, html {
+                font-size: 14px;
+            }
+            #results {
+                padding: 10px;
+            }
+            .result {
+                margin-bottom: 5px;
+                padding: 5px;
+            }
+            .alert-box {
+                top: 5px;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="results">
+        <h1>小奥のblog CDN智能网关路由线路匹配系统</h1>
+    </div>
+
+    <script type="text/javascript">
+        const urls = [
+            "https://www.aokaoka.top/#1-亚太  CDN",
+            "https://blog.aokaoka.top/#2-cloudflare  CDN"
+        ];
+
+        const resultsContainer = document.getElementById('results');
+
+        let fastestTime = Infinity;
+        let fastestUrl = '';
+
+        urls.forEach(url => {
+            const xhr = new XMLHttpRequest();
+            const startTime = performance.now();
+            xhr.open('HEAD', url, true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    const endTime = performance.now();
+                    const responseTime = endTime - startTime;
+
+                    let className = '';
+                    if (responseTime < 200) {
+                        className = 'ultra-fast';
+                    } else if (responseTime < 400) {
+                        className = 'fast';
+                    } else if (responseTime < 1500) {
+                        className = 'average';
+                    } else if (responseTime < 3000) {
+                        className = 'slow';
+                    } else {
+                        className = 'very-slow';
+                    }
+
+                    const resultElement = document.createElement('div');
+                    resultElement.className = 'result ' + className;
+                    resultElement.textContent = `${url.split('#')[1]} - ${responseTime.toFixed(2)} ms`;
+                    resultsContainer.appendChild(resultElement);
+
+                    if (responseTime < fastestTime) {
+                        fastestTime = responseTime;
+                        fastestUrl = url;
+                    }
+                }
+            };
+            xhr.send();
+        });
+
+        const alertBox = document.createElement('div');
+        alertBox.className = 'alert-box';
+        alertBox.textContent = '正在检测最快的线路，请稍等...';
+        document.body.appendChild(alertBox);
+
+        setTimeout(() => {
+            alertBox.textContent = `检测完成，正在跳转到最快的线路...`;
+            setTimeout(() => {
+                window.location.href = fastestUrl;
+            }, 3000); // 等待1.1秒后跳转，给用户足够的时间看到提示信息
+        }, 2000); // 1秒后显示跳转提示信息
+    </script>
+</body>
+</html>
