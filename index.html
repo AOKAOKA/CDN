@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <title>小奥のblog CDN智能路由线路匹配系统</title>
+    <title>小奥のCDN智能路由线路匹配系统</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body, html {
@@ -85,13 +85,13 @@
 </head>
 <body>
     <div id="results">
-        <h1>小奥のblog CDN智能网关路由线路匹配系统</h1>
+        <h1>小奥のCDN智能网关路由线路匹配系统</h1>
     </div>
 
     <script type="text/javascript">
         const urls = [
-            "https://www.aokaoka.top/#1-亚太  CDN",
-            "https://blog.aokaoka.top/#2-cloudflare  CDN"
+            "https://www.aokaoka.top/#亚太 CDN",
+            "https://blog.aokaoka.top/#cloudflare CDN"
         ];
 
         const resultsContainer = document.getElementById('results');
@@ -144,8 +144,8 @@
             alertBox.textContent = `检测完成，正在跳转到最快的线路...`;
             setTimeout(() => {
                 window.location.href = fastestUrl;
-            }, 3000); // 等待1.1秒后跳转，给用户足够的时间看到提示信息
-        }, 2000); // 1秒后显示跳转提示信息
+            }, 4000); // 等待4秒后跳转，给用户足够的时间看到提示信息
+        }, 2000); // 2秒后显示跳转提示信息
     </script>
 </body>
 </html>
