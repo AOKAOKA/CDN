@@ -1,168 +1,152 @@
-addEventListener('fetch', event => {
-    event.respondWith(handleRequest(event.request))
-})
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>小奥のCDN智能路由线路匹配系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-family: 'Open Sans', sans-serif;
+            color: #fff;
+            background: #000 url('https://tuchuang.aokaoka.top/file/1730628858465_blog.png') no-repeat center center fixed;
+            background-size: cover;
+        }
+        #results {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            max-width: 90%;
+            margin: 10px;
+        }
+        .result {
+            margin-bottom: 10px;
+            padding: 8px;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .result:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .ultra-fast { background-color: #28a745; }
+        .fast { background-color: #17a2b8; }
+        .average { background-color: #ffc107; }
+        .slow { background-color: #fd7e14; }
+        .very-slow { background-color: #dc3545; }
+        .alert-box {
+            position: fixed;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            background-color: #000;
+            color: #fff;
+            font-weight: bold;
+            animation: fadeOut 1s forwards, slideIn 0.5s forwards;
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(0); }
+        }
 
-async function handleRequest(request) {
-    const clientIP = request.headers.get('cf-connecting-ip') || '无法获取';
+        /* Responsive design for mobile devices */
+        @media (max-width: 768px) {
+            body, html {
+                font-size: 14px;
+            }
+            #results {
+                padding: 10px;
+            }
+            .result {
+                margin-bottom: 5px;
+                padding: 5px;
+            }
+            .alert-box {
+                top: 5px;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="results">
+        <h1>小奥のblog CDN智能网关路由线路匹配系统</h1>
+    </div>
 
-    const htmlContent = `
-    <!DOCTYPE html>
-    <html lang="zh-CN">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>BlogCDN 智能访问网关</title>
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                height: 100vh;
-                margin: 0;
-                background-image: url('https://tuchuang.aokaoka.top/file/1732152444373_67399d6ae2955.jpg');
-                background-size: cover;
-                background-position: center;
-                color: #333;
-            }
-            .container {
-                background-color: rgba(255, 255, 255, 0.85);
-                padding: 30px;
-                border-radius: 10px;
-                max-width: 400px;
-                text-align: center;
-                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            }
-            h1 {
-                font-size: 24px;
-                color: #333;
-                margin-bottom: 20px;
-            }
-            .cdn-list {
-                margin-top: 20px;
-                text-align: left;
-            }
-            .cdn-item {
-                display: flex;
-                align-items: center;
-                margin-bottom: 10px;
-                position: relative;
-            }
-            .cdn-item p {
-                font-size: 16px;
-                line-height: 1.5;
-                color: #333;
-                margin: 0;
-                width: 50%;
-            }
-            .latency-bar {
-                flex-grow: 1;
-                height: 10px;
-                background-color: #ddd;
-                border-radius: 5px;
-                overflow: hidden;
-                margin-left: 10px;
-                position: relative;
-            }
-            .latency-fill {
-                height: 100%;
-                background-color: #4caf50;
-                width: 0;
-                transition: width 0.3s ease;
-            }
-            .fastest {
-                font-weight: bold;
-                color: green;
-                margin-top: 20px;
-                font-size: 18px;
-            }
-            .visitor-count {
-                font-size: 14px;
-                color: #666;
-                margin-top: 10px;
-            }
-            .ip-address {
-                font-size: 14px;
-                color: #555;
-                margin-top: 15px;
-                font-style: italic;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <h1>BlogCDN 智能访问网关</h1>
-            <div class="cdn-list">
-                <div class="cdn-item">
-                    <p>Cloudflare CDN:</p>
-                    <div class="latency-bar"><div class="latency-fill" id="cloudflare-latency"></div></div>
-                    <span id="cloudflare-time">测量中...</span>
-                </div>
-                </div>
-                <div class="cdn-item">
-                    <p>Fastly CDN:</p>
-                    <div class="latency-bar"><div class="latency-fill" id="亚太-latency"></div></div>
-                    <span id="fastly-time">测量中...</span>
-                </div>
-                <div class="cdn-item">
-                    <p>Vercel CDN:</p>
-                    <div class="latency-bar"><div class="latency-fill" id="vercel-latency"></div></div>
-                    <span id="vercel-time">测量中...</span>
-                </div>
-            </div>
-            <div class="fastest" id="fastest-cdn">
-                最快 CDN: 测量中...
-            </div>
-            <div class="visitor-count">
-                🧲🤣!!! 📈今日访问人数: 12345
-            </div>
-            <div class="ip-address">
-                您的 IP 地址: ${clientIP}
-            </div>
-        </div>
-      
-        <script>
-            // 测试CDN延迟的函数
-            async function testLatency(url, elementId, timeId) {
-                const start = Date.now();
-                try {
-                    await fetch(url, { method: 'HEAD', mode: 'no-cors' });
-                } catch (error) {
-                    // Ignore errors due to CORS or network
+    <script type="text/javascript">
+        const urls = [
+            "https://www.aokaoka.top/#1-亚太 CDN",
+            "https://vercel.aokaoka.top/#2-vercel CDN",
+            "https://blog.aokaoka.top/#3-cloudflare CDN"
+        ];
+
+        const resultsContainer = document.getElementById('results');
+
+        let fastestTime = Infinity;
+        let fastestUrl = '';
+
+        urls.forEach(url => {
+            const xhr = new XMLHttpRequest();
+            const startTime = performance.now();
+            xhr.open('HEAD', url, true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    const endTime = performance.now();
+                    const responseTime = endTime - startTime;
+
+                    let className = '';
+                    if (responseTime < 200) {
+                        className = 'ultra-fast';
+                    } else if (responseTime < 400) {
+                        className = 'fast';
+                    } else if (responseTime < 1500) {
+                        className = 'average';
+                    } else if (responseTime < 3000) {
+                        className = 'slow';
+                    } else {
+                        className = 'very-slow';
+                    }
+
+                    const resultElement = document.createElement('div');
+                    resultElement.className = 'result ' + className;
+                    resultElement.textContent = `${url.split('#')[1]} - ${responseTime.toFixed(2)} ms`;
+                    resultsContainer.appendChild(resultElement);
+
+                    if (responseTime < fastestTime) {
+                        fastestTime = responseTime;
+                        fastestUrl = url;
+                    }
                 }
-                const latency = Date.now() - start;
-                document.getElementById(timeId).textContent = latency + 'ms';
-                document.getElementById(elementId).style.width = Math.min(100, (100 - (latency / 2))) + '%';
-                return latency;
-            }
+            };
+            xhr.send();
+        });
 
-            async function measureAllLatencies() {
-                const results = await Promise.all([
-                    testLatency('https://blog.aokaoka.top', 'cloudflare-latency', 'cloudflare-time'),
-                    testLatency('https://aokaoka.top', 'fastly-latency', '亚太-latency'),
-                    testLatency('https://vercel.aokaoka.top', 'vercel-latency', 'vercel-time')
-                ]);
+        const alertBox = document.createElement('div');
+        alertBox.className = 'alert-box';
+        alertBox.textContent = '正在检测最快的线路，请稍等...';
+        document.body.appendChild(alertBox);
 
-                const cdns = ['Cloudflare', 'Cloudflare1', 'Fastly', 'Gcore', 'Vercel'];
-                const fastestIndex = results.indexOf(Math.min(...results));
-                document.getElementById('fastest-cdn').textContent = '最快 CDN: ' + cdns[fastestIndex] + ' ✅';
-
-                // 自动跳转到最快的 CDN
-                const fastestCDNUrls = [
-                    'https://blog.aokaoka.top', 'https://aokaoka.top', 'https://vercel.aokaoka.top'
-                ];
-                window.location.href = fastestCDNUrls[fastestIndex];
-            }
-
-            // 开始测量延迟
-            measureAllLatencies();
-        </script>
-    </body>
-    </html>
-    `;
-
-    // 返回 HTML 响应
-    return new Response(htmlContent, {
-        headers: { 'content-type': 'text/html;charset=UTF-8' },
-    });
-}
+        setTimeout(() => {
+            alertBox.textContent = `检测完成，正在跳转到最快的线路...`;
+            setTimeout(() => {
+                window.location.href = fastestUrl;
+            }, 4000); // 等待4秒后跳转，给用户足够的时间看到提示信息
+        }, 2000); // 2秒后显示跳转提示信息
+    </script>
+</body>
+</html>
