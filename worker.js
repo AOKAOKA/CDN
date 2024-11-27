@@ -1,36 +1,3 @@
-addEventListener("fetch", event => {
-  event.respondWith(handleRequest(event.request));
-});
-
-async function handleRequest(request) {
-  // 生成 HTML 内容
-  const htmlContent = `
-  <!DOCTYPE html>
-  <html lang="zh-CN">
-  <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>小奥</title>
-      <style>
-          body {
-              font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-              margin: 0;
-              padding: 0;
-              background-image: url('https://tuchuang.aokaoka.top/file/1730247469226_Screenshot_20241030_081712_com.microsoft.emmx.png');
-              background-size: cover;
-              background-position: center;
-              height: 100vh;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-          }
-          .container {
-              background-color: rgba(255, 255, 255, 0.9);
-              border-radius: 20px;
-              padding: 20px;
-              width: 450px;
-              display: flex;
-              flex-direction: column;
               align-items: center;
               box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
               animation: fadeIn 1s ease-in-out;
@@ -122,7 +89,7 @@ async function handleRequest(request) {
 
       <script>
           // Fetch visit count
-          fetch('填自己的umami api地址')
+          fetch('https://umami.api.aokaoka.top/')
           .then(r => r.json())
           .then(d => document.getElementById('visitCount').innerText = d.today_pv)
           .catch(e => document.getElementById('visitCount').innerText = '加载失败');
