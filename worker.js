@@ -1,3 +1,36 @@
+addEventListener("fetch", event => {
+  event.respondWith(handleRequest(event.request));
+});
+
+async function handleRequest(request) {
+  // 生成 HTML 内容
+  const htmlContent = `
+  <!DOCTYPE html>
+  <html lang="zh-CN">
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>小奥</title>
+      <style>
+          body {
+              font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+              margin: 0;
+              padding: 0;
+              background-image: url('https://pic.imgdb.cn/item/66f6af86f21886ccc048a443.jpg');
+              background-size: cover;
+              background-position: center;
+              height: 100vh;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+          }
+          .container {
+              background-color: rgba(255, 255, 255, 0.9);
+              border-radius: 20px;
+              padding: 20px;
+              width: 450px;
+              display: flex;
+              flex-direction: column;
               align-items: center;
               box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
               animation: fadeIn 1s ease-in-out;
@@ -81,7 +114,7 @@
           <div class="logo-container">
               <img class="logo" src="https://tuchuang.aokaoka.top/file/1728007981683_pic09.jpg" alt="Logo">
           </div>
-          <h1>小奥のCDN 智能访问网关</h1>
+          <h1>BlogCDN 智能访问网关</h1>
           <ul class="description latency-list" id="urls"></ul>
           <span class="minifont">📢 与风共舞，随心而行。📈 今日访问人数: <span id="visitCount">加载中...</span></span>
           <span id="redirectingMessage" class="minifont" style="display: none;">正在跳转至最快的CDN...</span>
@@ -89,16 +122,15 @@
 
       <script>
           // Fetch visit count
-          fetch('https://umami.api.aokaoka.top/')
+          fetch('umami.api.aokaoka.us.kg')
           .then(r => r.json())
           .then(d => document.getElementById('visitCount').innerText = d.today_pv)
           .catch(e => document.getElementById('visitCount').innerText = '加载失败');
       
 
           const urls = [
-              "https://aokaoka.top#亚太 CDN",
-              "https://vercel.aokaoka.top#vercel CDN",
-              "https://blog.aokaoka.top#Cloudflare CDN"
+              "https://blog.aokaoka.top/#Cloudflare CDN",
+              "https://vercel.aokaoka.top/#vercel CDN"
 
           ];
 
@@ -111,7 +143,7 @@
               ul.appendChild(li);
           });
 
-          const timeout = 3000;
+          const timeout = 1000;
 
           function testLatency(url) {
               return new Promise((resolve) => {
@@ -162,7 +194,7 @@
 
                   setTimeout(() => {
                       window.location.href = fastest.url;
-                  }, 2000);
+                  }, 100);
               }
           }
 
