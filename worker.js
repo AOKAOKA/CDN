@@ -113,7 +113,7 @@ async function handleRequest(request) {
   <body>
       <div class="container">
           <div class="logo-container">
-              <img class="logo" src="https://tuchuang.aokaoka.top/file/1728007981683_pic09.jpg" alt="Logo">
+              <img class="logo" src="头像链接地址" alt="Logo">
           </div>
           <h1>BlogCDN 智能访问网关</h1>
           <ul class="description latency-list" id="urls"></ul>
