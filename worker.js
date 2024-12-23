@@ -11,12 +11,13 @@ async function handleRequest(request) {
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>小奥</title>
+      <script defer src="https://umami.aokaoka.top/script.js" data-website-id="1165d0f9-d893-4b1b-af44-8f7e6b76ae15"></script>
       <style>
           body {
               font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
               margin: 0;
               padding: 0;
-              background-image: url('https://pic.imgdb.cn/item/66f6af86f21886ccc048a443.jpg');
+              background-image: url('背景图片链接放这');
               background-size: cover;
               background-position: center;
               height: 100vh;
@@ -122,13 +123,14 @@ async function handleRequest(request) {
 
       <script>
           // Fetch visit count
-          fetch('umami.api.aokaoka.us.kg')
+          fetch('换自己的umamiAPI')
           .then(r => r.json())
           .then(d => document.getElementById('visitCount').innerText = d.today_pv)
           .catch(e => document.getElementById('visitCount').innerText = '加载失败');
       
 
           const urls = [
+              "https://github.aokaoka.top/#github CDN",
               "https://blog.aokaoka.top/#Cloudflare CDN",
               "https://vercel.aokaoka.top/#vercel CDN"
 
@@ -143,7 +145,7 @@ async function handleRequest(request) {
               ul.appendChild(li);
           });
 
-          const timeout = 1000;
+          const timeout = 600;
 
           function testLatency(url) {
               return new Promise((resolve) => {
@@ -194,7 +196,7 @@ async function handleRequest(request) {
 
                   setTimeout(() => {
                       window.location.href = fastest.url;
-                  }, 100);
+                  }, 600);
               }
           }
 
